@@ -1,0 +1,66 @@
+<!DOCTYPE html><html><head><title>安装并使用PHPunit</title><meta charset='utf-8'><link href='https://dn-maxiang.qbox.me/res-min/themes/marxico.css' rel='stylesheet'><style></style></head><body><div id='preview-contents' class='note-content'>
+                        
+                    
+
+<h2 id="安装并使用phpunit">安装并使用PHPunit</h2>
+
+<h3 id="linux-下安装phpunit">Linux 下安装PHPunit</h3>
+
+<p>PHP 档案包 (PHAR) <br>
+要获取 PHPUnit，最简单的方法是下载 PHPUnit 的 PHP 档案包 (PHAR)，它将 PHPUnit 所需要的所有必要组件（以及某些可选组件）捆绑在单个文件中：</p>
+
+<p>要使用 PHP档案包(PHAR)需要有 phar 扩展。</p>
+
+<p>要使用 PHAR 的 –self-update 功能需要有 openssl 扩展。</p>
+
+<p>如果启用了 Suhosin 扩展，需要在 php.ini 中允许执行 PHAR：</p>
+
+<p>suhosin.executor.include.whitelist = phar <br>
+如果要全局安装 PHAR：</p>
+
+<pre class="prettyprint hljs-dark"><code class="hljs stylus">$ wget https:<span class="hljs-comment">//phar.phpunit.de/phpunit.phar</span><br>$ chmod +x phpunit<span class="hljs-class">.phar</span><br>$ chmod +x phpunit<span class="hljs-class">.phar</span><br>$ sudo mv phpunit<span class="hljs-class">.phar</span> /usr/local/bin/phpunit<br>$ phpunit --version<br></code></pre>
+
+<p>PHPUnit x.y.z by Sebastian Bergmann and contributors. <br>
+也可以直接使用下载的 PHAR 文件：</p>
+
+<p>$ wget <a href="https://phar.phpunit.de/phpunit.phar" target="_blank">https://phar.phpunit.de/phpunit.phar</a> <br>
+$ php phpunit.phar –version <br>
+PHPUnit x.y.z by Sebastian Bergmann and contributors.（笔者的版本是PHPUnit 5.7.4 by Sebastian Bergmann and contributors.） <br>
+<strong>注意：</strong>PHPunit是有对应版本的最新的版的支持php7.* 官方建议我们安装最新版php，当然不一样要安装最新的只是如果你的版本是php6.*+最好下载最新的PHPunit</p>
+
+<h2 id="windows下安装phpunit">Windows下安装PHPunit</h2>
+
+<ol><li rel="1"><p>为 PHP 的二进制可执行文件建立一个目录，例如 D:\Server\bin</p></li>
+<li rel="2"><p>将 D:\Server\bin 添加加到 PATH 环境变量中（这样PHPunit全局生效）</p></li>
+<li rel="3"><p>下载 <a href="https://phar.phpunit.de/phpunit.phar" target="_blank">https://phar.phpunit.de/phpunit.phar</a> 并将文件保存到 C:\bin\phpunit.phar（<strong>注意下载下来一般是phpunitx.y.phar</strong>，带版本号的,名字要和下面命令执行的文件一直不然执行命令会找不到文件以至于提示could not open file ….）</p></li>
+<li rel="4"><p>打开命令行（例如，按 Windows+R » 输入 cmd » ENTER)</p></li>
+</ol>
+
+<p>建立外包覆批处理脚本（最后得到 D:\Server\bin\phpunit.cmd）：</p>
+
+<pre class="prettyprint hljs-dark"><code class="hljs less"><span class="hljs-attribute">C</span>:\Users\username&gt; cd <span class="hljs-attribute">D</span>:Server\bin<br><span class="hljs-attribute">C</span>:\bin&gt; echo <span class="hljs-variable">@php</span> <span class="hljs-string">"%~dp0phpunit.phar"</span> %* &gt; phpunit.cmd<br><span class="hljs-attribute">C</span>:\bin&gt; exit<br></code></pre>
+
+<p>新开一个命令行窗口，确认一下可以在任意路径下执行 PHPUnit： <br>
+<code>C:\Users\username&gt; phpunit --version</code> <br>
+PHPUnit 5.7.4 by Sebastian Bergmann and contributors. <br>
+<strong>注：</strong>如果全局下不能运行，那就到之前生成的目录下运行试试，如：（还不行就是上述步骤出错了，仔细检查下）</p>
+
+<pre class="prettyprint hljs-dark"><code class="hljs tex"> C:<span class="hljs-command">\Users</span><span class="hljs-command">\username</span>&gt; cd D:Server<span class="hljs-command">\bin</span><br> D:<span class="hljs-command">\Server</span><span class="hljs-command">\bin</span> phpunit --version<br></code></pre>
+
+
+
+<h2 id="编写测试">编写测试</h2>
+
+<p><strong>注：</strong><code>这个文件创建上面生成批处理脚本的文件夹下</code> <br>
+创建文件StackTest.php</p>
+
+<pre class="prettyprint hljs-dark"><code class="hljs xml"><span class="php"><span class="hljs-preprocessor">&lt;?php</span><br><span class="hljs-keyword">use</span> <span class="hljs-title">PHPUnit</span>\<span class="hljs-title">Framework</span>\<span class="hljs-title">TestCase</span>;<br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StackTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestCase</span><br>    </span>{<br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testPushAndPop</span><span class="hljs-params">()</span><br>        </span>{<br>            <span class="hljs-variable">$stack</span> = [];<br>            <span class="hljs-variable">$this</span>-&gt;assertEquals(<span class="hljs-number">0</span>, count(<span class="hljs-variable">$stack</span>));<br><br>            array_push(<span class="hljs-variable">$stack</span>, <span class="hljs-string">'foo'</span>);<br>            <span class="hljs-variable">$this</span>-&gt;assertEquals(<span class="hljs-string">'foo'</span>, <span class="hljs-variable">$stack</span>[count(<span class="hljs-variable">$stack</span>)-<span class="hljs-number">1</span>]);<br>            <span class="hljs-variable">$this</span>-&gt;assertEquals(<span class="hljs-number">1</span>, count(<span class="hljs-variable">$stack</span>));<br><br>            <span class="hljs-variable">$this</span>-&gt;assertEquals(<span class="hljs-string">'foo'</span>, array_pop(<span class="hljs-variable">$stack</span>));<br>            <span class="hljs-variable">$this</span>-&gt;assertEquals(<span class="hljs-number">0</span>, count(<span class="hljs-variable">$stack</span>));<br>        }<br>    }<br>    <span class="hljs-preprocessor">?&gt;</span></span><br></code></pre>
+
+<h3 id="进行测试">进行测试</h3>
+
+<pre class="prettyprint hljs-dark"><code class="hljs cpp">D:\Server\bin  phpunit StackTest.php<br>D:\Server\bin&gt;phpunit login_test.php<br>    PHPUnit <span class="hljs-number">5.7</span><span class="hljs-number">.4</span> by Sebastian Bergmann and contributors.<br><br>    .                                                                   <span class="hljs-number">1</span> / <span class="hljs-number">1</span> (<span class="hljs-number">100</span>%)<br><br>    Time: <span class="hljs-number">134</span> ms, Memory: <span class="hljs-number">8.00</span><span class="hljs-function">MB<br><br>    <span class="hljs-title">OK</span> <span class="hljs-params">(<span class="hljs-number">1</span> test, <span class="hljs-number">5</span> assertions)</span></span><br></code></pre>
+
+<p>PHPunit的安装和编写测试已经完成了。具体的操作请查看官方手册。 <br>
+<a href="https://phpunit.de/manual/current/zh_cn/installation.html" target="_blank">官网手册</a></p>
+
+<p><strong>欢迎指正交流 QQ:407461375</strong></p></div></body></html>
